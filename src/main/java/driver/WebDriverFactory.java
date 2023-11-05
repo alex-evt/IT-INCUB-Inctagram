@@ -2,13 +2,11 @@ package driver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.core.config.plugins.PluginLoggerContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.safari.SafariOptions;
 
 @Log4j2
 public class WebDriverFactory {
@@ -35,6 +33,8 @@ public class WebDriverFactory {
                 default:                   //Chrome is default
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--incognito");
+                    chromeOptions.addArguments("--lang=en");
+//                    chromeOptions.addArguments("--window-size=1920,1080");
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver(chromeOptions);
             }
