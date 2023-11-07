@@ -10,13 +10,13 @@ public class BaseTest {
     protected WebDriver driver;
 
     @BeforeClass
-    public void startBrowser(){
+    public void startBrowser() {
         driver = DriverSingleton.getInstance().getDriver();
         PageFactory.initElements(driver, this);
     }
 
-    @AfterClass
-    public void stopBrowser(){
+    @AfterClass(alwaysRun = true)
+    public void stopBrowser() {
         DriverSingleton.getInstance().closeDriver();
     }
 }

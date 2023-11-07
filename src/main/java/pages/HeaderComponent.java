@@ -1,9 +1,11 @@
 package pages;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import utils.Waiter;
 
-public class HeaderComponent extends BaseModel {
+public class HeaderComponent<Page> extends BaseModel {
 
 
     @FindBy(xpath = "//header//button")
@@ -24,8 +26,22 @@ public class HeaderComponent extends BaseModel {
     }
 
     public String getCurrentLanguage() {
-        return languageChanger.getText();
+        return Waiter.waitVisibilityOfElement5Second(languageChanger).getText();
     }
 
+    public HeaderComponent<Page> clickLanguageChanger() { //исправить
+        Waiter.waitVisibilityOfElement5Second(languageChanger);
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click()", languageChanger);
+//        Waiter.waitVisibilityOfElement5Second(languageChanger).click();
+        return this;
+    }
 
+    public Page clickRussianLanguage() { //исправить
+        Waiter.waitVisibilityOfElement5Second(russianLanguage);
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click()", russianLanguage);
+//        Waiter.waitVisibilityOfElement10Second(russianLanguage).click();
+        return (Page) this;
+    }
 }

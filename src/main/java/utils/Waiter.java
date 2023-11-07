@@ -16,6 +16,7 @@ public class Waiter {
 
     private static final int WAIT_FIVE_SECONDS = 5;
     private static final int WAIT_TEN_SECONDS = 10;
+    private static final int WAIT_TWENTY_SECONDS = 20;
 
     public static WebElement waitVisibilityOfElement5Second(WebElement webElement) {
         return new WebDriverWait(DriverSingleton.getInstance().getDriver(), Duration.ofSeconds(WAIT_FIVE_SECONDS))
@@ -27,6 +28,10 @@ public class Waiter {
                 .until(ExpectedConditions.visibilityOf(webElement));
     }
 
+    public static WebElement waitVisibilityOfElement20Second(WebElement webElement) {
+        return new WebDriverWait(DriverSingleton.getInstance().getDriver(), Duration.ofSeconds(WAIT_TWENTY_SECONDS))
+                .until(ExpectedConditions.visibilityOf(webElement));
+    }
 
     public static WebElement waitElementToBeClickable10Second(WebElement webElement) {
         return new WebDriverWait(DriverSingleton.getInstance().getDriver(), Duration.ofSeconds(WAIT_TEN_SECONDS))
