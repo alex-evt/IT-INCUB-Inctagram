@@ -1,0 +1,40 @@
+name: Automated CI tests
+
+on:
+  workflow-dispatch:
+    inputs:
+      deployment-target:
+        description: Choose target
+        required: true
+        default:
+          type: choice
+          options:
+            -regression
+            -regress+extended
+
+  jobs:
+    test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '18'
+
+      - name: Install Chrome
+        run: sudo apt-get install google-chrome-stable
+
+      - name: install dependencies
+        run: sudo apt install ./pom.xml
+
+      - name: regression
+        run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml -Dgroups=Regression
+        if: "github.event.inputs.deployment-target == 'regression'"
+      - name: regress+extended
+        run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml
+        if: "github.event.inputs.deployment-target == 'second-test'"
