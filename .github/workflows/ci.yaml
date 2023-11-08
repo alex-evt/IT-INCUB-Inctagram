@@ -1,19 +1,19 @@
 name: Automated CI tests
 
 on:
-  workflow-dispatch:
+  workflow_dispatch:
     inputs:
       deployment-target:
         description: Choose target
         required: true
         default:
-          type: choice
-          options:
-            -regression
-            -regress+extended
+        type: choice
+        options:
+            - regression
+            - regress_extended
 
-  jobs:
-    test:
+jobs:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,12 +29,12 @@ on:
       - name: Install Chrome
         run: sudo apt-get install google-chrome-stable
 
-      - name: install dependencies
-        run: sudo apt install ./pom.xml
+      - name: Download Maven dependencies
+        run: mvn dependency:resolve
 
       - name: regression
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml -Dgroups=Regression
         if: "github.event.inputs.deployment-target == 'regression'"
       - name: regress+extended
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml
-        if: "github.event.inputs.deployment-target == 'second-test'"
+        if: "github.event.inputs.deployment-target == 'regress_extended'"
