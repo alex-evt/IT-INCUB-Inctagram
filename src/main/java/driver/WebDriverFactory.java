@@ -33,6 +33,7 @@ public class WebDriverFactory {
                 default:                   //Chrome is default
                     ChromeOptions chromeOptions = new ChromeOptions();
 //                    chromeOptions.addArguments("--incognito");
+                    chromeOptions.addArguments("--headless");
                     chromeOptions.addArguments("--lang=en");
 //                    chromeOptions.addArguments("--window-size=1920,1080");
                     WebDriverManager.chromedriver().setup();
