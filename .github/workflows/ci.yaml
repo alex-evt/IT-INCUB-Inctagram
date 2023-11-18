@@ -27,7 +27,7 @@ jobs:
           java-version: '18'
 
       - name: Install Chrome
-        run: browser-actions/setup-chrome@latest
+        uses: browser-actions/setup-chrome@latest
 
       - name: regression
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml -Dgroups=Regression
