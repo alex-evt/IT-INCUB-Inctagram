@@ -1,6 +1,7 @@
 name: Automated CI tests
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       deployment-target:
@@ -28,6 +29,7 @@ jobs:
 
       - name: Install Chrome
         uses: browser-actions/setup-chrome@latest
+      - run: chrome --version
 
       - name: regression
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml -Dgroups=Regression
