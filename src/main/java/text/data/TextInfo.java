@@ -1,4 +1,4 @@
-package data;
+package text.data;
 
 public class TextInfo {
 

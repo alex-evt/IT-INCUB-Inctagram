@@ -6,9 +6,9 @@ import pages.signIn.ForgotPasswordPage;
 import pages.signIn.LoginPage;
 import pages.signUp.RegistrationPage;
 
-public class LoginPageService {
+import static text.data.PagesURL.LOGIN_PAGE_URL;
 
-    private static final String LOGIN_PAGE_URL = "https://inctagram.vercel.app/sign-in";
+public class LoginPageService {
 
     private final LoginPage loginPage = new LoginPage();
 
@@ -19,6 +19,15 @@ public class LoginPageService {
                 .fillInPassword(user.getPassword())
                 .clickSignIn();
         return new MyProfilePage();
+    }
+
+    public LoginPage unsuccessfulLogin(User user) {
+        loginPage
+                .open(LOGIN_PAGE_URL)
+                .fillInEmail(user.getEmail())
+                .fillInPassword(user.getPassword())
+                .clickSignIn();
+        return new LoginPage();
     }
 
     public RegistrationPage clickSignUp() {
@@ -33,7 +42,7 @@ public class LoginPageService {
         return new ForgotPasswordPage();
     }
 
-    public LoginPage clickHeader(){
+    public LoginPage clickHeader() {
         loginPage.open(LOGIN_PAGE_URL)
                 .getHeader()
                 .clickLogo();

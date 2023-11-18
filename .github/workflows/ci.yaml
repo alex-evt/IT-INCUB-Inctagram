@@ -27,10 +27,7 @@ jobs:
           java-version: '18'
 
       - name: Install Chrome
-        run: sudo apt-get install google-chrome-stable
-
-      - name: Download Maven dependencies
-        run: mvn dependency:resolve
+        run: browser-actions/setup-chrome@latest
 
       - name: regression
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml -Dgroups=Regression

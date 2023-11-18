@@ -3,8 +3,8 @@ package pages.signIn;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import pages.BasePage;
-import pages.HeaderComponent;
 import pages.MyProfilePage;
+import pages.components.HeaderComponent;
 import pages.signUp.RegistrationPage;
 import utils.Waiter;
 
@@ -47,7 +47,7 @@ public class LoginPage extends BasePage<HeaderComponent> {
     private WebElement russianLanguage;
 
     public LoginPage fillInEmail(String email) {
-        Waiter.waitVisibilityOfElement5Second(emailField).sendKeys(email);
+        Waiter.waitVisibilityOfElement10Second(emailField).sendKeys(email);
         return this;
     }
 
@@ -75,7 +75,7 @@ public class LoginPage extends BasePage<HeaderComponent> {
     }
 
     public String getErrorAlert() {
-        return errorAlert.getText();
+        return Waiter.waitVisibilityOfElement5Second(errorAlert).getText();
     }
 
     public RegistrationPage clickSignUp() { //signUp

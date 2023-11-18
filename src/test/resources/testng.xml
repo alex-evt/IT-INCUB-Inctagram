@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
-<suite name="Regression">
+<suite name="TestSuite">
+        <listeners>
+            <listener class-name="utils.Listener"/>
+        </listeners>
 
-    <test name="Registration">
+    <test name="Regression">
         <groups>
-            <define name="Regression"/>
-            <define name="Extended"/>
             <run>
                 <include name="Regression"/>
                 <include name="Extended"/>
@@ -14,17 +15,8 @@
         </groups>
 
         <classes>
-            <class name="tests.RegistrationTest">
-                <methods>
-                    <!--                    <include name="Regression"/>-->
-                    <!--                    <include name="verifyUserClickPrivacyPolicyInRussian"/>-->
-                    <!--                    <include name="verifyUserClickTermsOfServiceInRussian"/>-->
-                    <!--                    <include name="verifyUserClickPrivacyPolicyInEnglish"/>-->
-                    <!--                    <include name="verifyUserClickTermsOfServiceInEnglish"/>-->
-                </methods>
-            </class>
-            <!--            <class name="tests.RegistrationTest"/>-->
+            <class name="tests.RegistrationTest"/>
+            <class name="tests.LoginPageTest"/>
         </classes>
     </test>
-
 </suite>
