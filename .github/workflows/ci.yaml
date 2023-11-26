@@ -10,7 +10,6 @@ on:
         type: choice
         options:
           - regression
-          - regress_extended
 
 jobs:
   test:
@@ -39,11 +38,8 @@ jobs:
           path: gh-pages
 
       - name: regression
-        run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml -Dgroups=Regression -Dmaven.test.failure.ignore=true
-        if: "github.event.inputs.deployment-target == 'regression'"
-      - name: regress+extended
         run: mvn test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/test/resources/testng.xml -Dmaven.test.failure.ignore=true
-        if: "github.event.inputs.deployment-target == 'regress_extended'"
+        if: "github.event.inputs.deployment-target == 'regression'"
 
       - name: Allure Report action from marketplace
         uses: simple-elf/allure-report-action@master
