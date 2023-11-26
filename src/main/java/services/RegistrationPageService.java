@@ -1,15 +1,14 @@
 package services;
 
+import API.adapter.MailAdapter;
 import io.qameta.allure.Step;
 import models.User;
-import pages.external.temp.mail.TempMailPage;
 import pages.signUp.CongratulationPage;
 import pages.signUp.PrivacyPolicyPage;
 import pages.signUp.RegistrationPage;
 import pages.signUp.TermsOfServicePage;
 
 import static text.data.PagesURL.REGISTRATION_PAGE_URL;
-import static text.data.PagesURL.TEMP_MAIL_URL;
 
 public class RegistrationPageService extends HeaderComponentService<RegistrationPageService> {
 
@@ -41,41 +40,10 @@ public class RegistrationPageService extends HeaderComponentService<Registration
         return new RegistrationPage();
     }
 
-
-    @Step("User registration without email confirmation")
-    public RegistrationPage fillInAllFieldsAndClickAgreements(User user) {
-        registrationPage
-                .open(REGISTRATION_PAGE_URL)
-                .fillInUserName(user.getUserName())
-                .fillInEmail(user.getEmail())
-                .fillInPassword(user.getPassword())
-                .fillInConfirmationPassword(user.getPasswordConfirm())
-                .clickAgreementsCheckbox();
-        return new RegistrationPage();
-    }
-
-
-    public RegistrationPage registrationWithoutClickSignUp(User user) {
-        registrationPage
-                .open(REGISTRATION_PAGE_URL)
-                .fillInUserName(user.getUserName())
-                .fillInEmail(user.getEmail())
-                .fillInPassword(user.getPassword())
-                .fillInConfirmationPassword(user.getPasswordConfirm())
-                .clickAgreementsCheckbox();
-        return new RegistrationPage();
-    }
-
-    @Step("Open temporary mail page and get email")
-    public String openTempMailAndGetCurrentEmail() {
-        return new TempMailPage()
-                .open(TEMP_MAIL_URL).getCurrentEmail();
-    }
-
     @Step("User registration with email confirmation")
-    public CongratulationPage registrationWithConfirmation(User user) {
-        new TempMailPage()
-                .openNewTabToRegistrationPage(REGISTRATION_PAGE_URL)
+    public CongratulationPage registrationWithConfirmation(MailAdapter tempEmail , User user) {
+        new RegistrationPage()
+                .open(REGISTRATION_PAGE_URL)
                 .fillInUserName(user.getUserName())
                 .fillInEmail(user.getEmail())
                 .fillInPassword(user.getPassword())
@@ -84,14 +52,13 @@ public class RegistrationPageService extends HeaderComponentService<Registration
                 .clickSignUp()
                 .clickOkButton();
 
-        new RegistrationPage()
-                .switchToTempEmailPage();
+        wait(10000);
 
-        new TempMailPage()
-                .getReceivedMail()
-                .switchToEmailFrame()
-                .getSetUpAccountButtonInEmail();
-        return new TempMailPage().switchToCongratulationPage();
+        String confirmationLink = tempEmail.getLastMessageConfirmationLink();
+
+        new CongratulationPage().open(confirmationLink).getConfirmationText();
+//        wait(20000);
+        return new CongratulationPage();
     }
 
     public String getCurrentLanguage() {
@@ -103,5 +70,13 @@ public class RegistrationPageService extends HeaderComponentService<Registration
     public RegistrationPageService openRegistrationPage() {
         registrationPage.open(REGISTRATION_PAGE_URL);
         return this;
+    }
+
+    public void wait(int seconds){
+        try {
+            Thread.sleep(seconds);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

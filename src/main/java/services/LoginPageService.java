@@ -1,5 +1,6 @@
 package services;
 
+import io.qameta.allure.Step;
 import models.User;
 import pages.MyProfilePage;
 import pages.signIn.ForgotPasswordPage;
@@ -12,6 +13,7 @@ public class LoginPageService {
 
     private final LoginPage loginPage = new LoginPage();
 
+    @Step("Successful login")
     public MyProfilePage login(User user) {
         loginPage
                 .open(LOGIN_PAGE_URL)
@@ -21,6 +23,7 @@ public class LoginPageService {
         return new MyProfilePage();
     }
 
+    @Step("Unsuccessful login")
     public LoginPage unsuccessfulLogin(User user) {
         loginPage
                 .open(LOGIN_PAGE_URL)

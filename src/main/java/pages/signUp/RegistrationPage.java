@@ -1,14 +1,15 @@
 package pages.signUp;
 
 import io.qameta.allure.Step;
+import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import pages.BasePage;
 import pages.components.HeaderComponent;
-import pages.external.temp.mail.TempMailPage;
 import pages.signIn.LoginPage;
 import utils.Waiter;
 
+@Log4j2
 public class RegistrationPage extends BasePage<HeaderComponent> {
 
     @FindBy(xpath = "//input[@id='sign-up-userName']")
@@ -45,7 +46,7 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
     private WebElement confirmPasswordFieldEye;
 
     //hints
-    @FindBy(xpath = "(//p[@id='sign-up-userName'])")
+    @FindBy(xpath = "//p[@id='sign-up-userName']")
     private WebElement userNameErrorMessage;
 
     @FindBy(xpath = "(//p[@id='sign-up-email'])")
@@ -57,7 +58,7 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
     @FindBy(xpath = "(//p[@id='sign-up-passwordConfirm'])")
     private WebElement confirmPasswordErrorMessage;
 
-    @FindBy(xpath = "(//p[@id='sign-up-userName-error']) [5]")
+    @FindBy(xpath = "(//p[@id='sign-up-agreemets'])")
     private WebElement agreementsErrorMessage;
 
 
@@ -68,32 +69,37 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
     @FindBy(xpath = "//div[@class='modal__footer']/button")
     private WebElement emailSentMessageOkButton;
 
-    @Step("Fill in {userName} in Username field")
-    public RegistrationPage fillInUserName(String userName) {
-        Waiter.waitVisibilityOfElement5Second(userNameField).sendKeys(userName);
+    @Step("Fill in {username} in Username field")
+    public RegistrationPage fillInUserName(String username) {
+        log.info("Fill in '{}' in Username field", username);
+        Waiter.waitVisibilityOfElement5Second(userNameField).sendKeys(username);
         return this;
     }
 
     @Step("Fill in {email} in Email field")
     public RegistrationPage fillInEmail(String email) {
+        log.info("Fill in '{}' in Email field", email);
         Waiter.waitVisibilityOfElement5Second(emailField).sendKeys(email);
         return this;
     }
 
     @Step("Fill in {password} in Password field")
     public RegistrationPage fillInPassword(String password) {
+        log.info("Fill in '{}' in Password field", password);
         Waiter.waitVisibilityOfElement5Second(passwordField).sendKeys(password);
         return this;
     }
 
     @Step("Fill in {confirmationPassword} in Password confirmation field")
     public RegistrationPage fillInConfirmationPassword(String confirmationPassword) {
+        log.info("Fill in '{}' in Password confirmation field", confirmationPassword);
         confirmPasswordField.sendKeys(confirmationPassword);
         return this;
     }
 
     @Step("Click on the checkbox")
     public RegistrationPage clickAgreementsCheckbox() {
+        log.info("Click on the checkbox");
         agreementsCheckbox.click();
         return this;
     }
@@ -137,7 +143,7 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
     }
 
     public String getUserNameErrorMessage() {
-        return userNameErrorMessage.getText();
+        return Waiter.waitVisibilityOfElement5Second(userNameErrorMessage).getText();
     }
 
     @Step("Get Email field error message")
@@ -164,6 +170,7 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
 
     @Step("Click OK")
     public RegistrationPage clickOkButton() {
+        log.info("Click OK");
         Waiter.waitVisibilityOfElement10Second(emailSentMessageOkButton).click();
         return this;
     }
@@ -171,21 +178,22 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
 
     @Step("Open {url}")
     public RegistrationPage open(String url) {
+        log.info("Open '{}'", url);
         driver.get(url);
         return this;
     }
 
-    public TempMailPage switchToTempEmailPage() {
-        String originalWindow = driver.getWindowHandle();
-        for (String winHandle : driver.getWindowHandles()) {
-            if (!originalWindow.contentEquals(winHandle)) {
-                driver.close();
-                driver.switchTo().window(winHandle);
-                break;
-            }
-        }
-        return new TempMailPage();
-    }
+//    public TempMailPage switchToTempEmailPage() {
+//        String originalWindow = driver.getWindowHandle();
+//        for (String winHandle : driver.getWindowHandles()) {
+//            if (!originalWindow.contentEquals(winHandle)) {
+//                driver.close();
+//                driver.switchTo().window(winHandle);
+//                break;
+//            }
+//        }
+//        return new TempMailPage();
+//    }
 
 //    public TempMailPage closeRegistrationTab() {
 //        driver.close();

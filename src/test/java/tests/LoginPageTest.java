@@ -2,91 +2,115 @@ package tests;
 
 import io.qameta.allure.Description;
 import models.User;
-import net.datafaker.Faker;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import services.LoginPageService;
+import services.MyProfileService;
 import services.RegistrationPageService;
+import utils.Utility;
 
 public class LoginPageTest extends BaseTest {
 
-    Faker faker = new Faker();
-    LoginPageService loginPageService = new LoginPageService();
-    RegistrationPageService registrationPageService = new RegistrationPageService();
-
+    private final String expectedErrorEmailPassword = "The email or password are incorrect. Try again please";
+    private LoginPageService loginPageService;
+    private MyProfileService myProfileService;
+    private RegistrationPageService registrationPageService;
+    @BeforeClass
+    public void init() {
+        loginPageService = new LoginPageService();
+        myProfileService = new MyProfileService();
+        registrationPageService = new RegistrationPageService();
+    }
 
     @Description("Successful login to the system with email confirmation")
-    @Test(groups = "Regression")
+    @Test(groups = "SuccessfulLogin")
     public void verifySuccessfulLogin() {
-//       User registeredUser = User.readUserDataFromFile();
-        String username = faker.name().username().replace(".", "");
-        String password = faker.regexify("[A-Z]{2}[a-z]{2}[0-9]{1}[!]{2}");
-        String currentTempEmail = registrationPageService
-                .openTempMailAndGetCurrentEmail();
-
-        User user = User.builder().userName(username).email(currentTempEmail).password(password).passwordConfirm(password).build();
-
-        registrationPageService
-                .registrationWithConfirmation(user);
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
+        User registeredUser = User.readUserDataFromFile();
         String textHomeButton = loginPageService
-                .login(user).getTextHomeButton();
+                .login(registeredUser).getTextHomeButton();
         Assert.assertEquals(textHomeButton, "Home");
     }
 
     @Description("Unsuccessful login to the system without email confirmation")
-    @Test(groups = "Regression")
+    @Test
     public void verifyUnsuccessfulLoginEmailUnconfirmed() {
-        String userName = faker.name().username().replace(".", "");
-        String email = faker.expression("#{letterify '???@????.???'}");
-        String password = faker.regexify("[A-Z]{2}[a-z]{2}[0-9]{2}[!]{1}");
+        String userName = Utility.getRandomUsername();
+        String email = Utility.getRandomEmail();
+        String password = Utility.getRandomPassword();
         User user = User.builder().userName(userName).email(email).password(password).passwordConfirm(password).build();
 
         registrationPageService.registrationWithoutConfirmation(user);
 
-        String actualAlertMessage = loginPageService.unsuccessfulLogin(user).getErrorAlert();
-        Assert.assertEquals(actualAlertMessage, "Confirmation code is invalid");
+        String actualErrorMessage = loginPageService
+                .unsuccessfulLogin(user)
+                .getPasswordErrorMessage();
+        Assert.assertEquals(actualErrorMessage, expectedErrorEmailPassword);
     }
 
     @Description("Unsuccessful authorization for a non-existent user")
-    @Test(groups = "Regression")
+    @Test
     public void verifyUnsuccessfulLoginNonexistentUser() {
         String email = "nnn000n@ooooon.ozn";
         String password = "Test1!";
         User user = User.builder().email(email).password(password).build();
 
-        String actualAlertMessage = loginPageService
+        String actualErrorMessage = loginPageService
                 .unsuccessfulLogin(user)
-                .getErrorAlert();
-        Assert.assertEquals(actualAlertMessage, "invalid password or email");
+                .getPasswordErrorMessage();
+        Assert.assertEquals(actualErrorMessage, expectedErrorEmailPassword);
     }
 
-    @Description("Authorization error when invalid email entered")
-    @Test(groups = "Regression")
+    @Description("Authorization error when entering an invalid email address")
+    @Test
     public void verifyErrorInvalidEmail() {
         String invalidEmail = "Jipeeer@keeeeperz.ol";
         String validPassword = User.readUserDataFromFile().getPassword();
         User user = User.builder().email(invalidEmail).password(validPassword).build();
 
-        String actualAlertMessage = loginPageService.unsuccessfulLogin(user).getErrorAlert();
-        Assert.assertEquals(actualAlertMessage, "invalid password or email");
+        String actualErrorMessage = loginPageService
+                .unsuccessfulLogin(user)
+                .getPasswordErrorMessage();
+        Assert.assertEquals(actualErrorMessage, expectedErrorEmailPassword);
     }
 
-    @Description("Authorization error when invalid password entered")
-    @Test(groups = "Regression")
+    @Description("Authorization error when entering an invalid password")
+    @Test
     public void verifyErrorInvalidPassword() {
         String validEmail = User.readUserDataFromFile().getEmail();
         String invalidPassword = "mkgfc@8000";
         User user = User.builder().email(validEmail).password(invalidPassword).build();
 
-        String actualAlertMessage = loginPageService.unsuccessfulLogin(user).getErrorAlert();
-        Assert.assertEquals(actualAlertMessage, "invalid password or email");
+        String actualErrorMessage = loginPageService
+                .unsuccessfulLogin(user)
+                .getPasswordErrorMessage();
+        Assert.assertEquals(actualErrorMessage, expectedErrorEmailPassword);
     }
 
+    @Description("Successful log out from account of the system")
+    @Test
+    public void verifySuccessfulLogout() {
+        User registeredUser = User.readUserDataFromFile();
+        loginPageService
+                .login(registeredUser);
+        String actualTitle = myProfileService
+                .logOut()
+                .getTitle();
+        Assert.assertEquals(actualTitle, "Sign In");
+    }
+
+    @Test(groups = "SuccessfulLogin")
+    public void verifyCancelLogout() {
+        User registeredUser = User.readUserDataFromFile();
+        loginPageService
+                .login(registeredUser);
+        String textHomeButton = myProfileService.cancelLogout().getTextHomeButton();
+        Assert.assertEquals(textHomeButton, "Home");
+    }
+
+    @AfterMethod(onlyForGroups = "SuccessfulLogin")
+    public void logout() {
+        myProfileService.logOut().getTitle();
+    }
 }

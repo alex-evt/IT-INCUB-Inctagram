@@ -2,18 +2,8 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
 <suite name="TestSuite">
-        <listeners>
-            <listener class-name="utils.Listener"/>
-        </listeners>
 
     <test name="Regression">
-        <groups>
-            <run>
-                <include name="Regression"/>
-                <include name="Extended"/>
-            </run>
-        </groups>
-
         <classes>
             <class name="tests.RegistrationTest"/>
             <class name="tests.LoginPageTest"/>

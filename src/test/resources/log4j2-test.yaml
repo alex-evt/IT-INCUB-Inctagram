@@ -6,31 +6,34 @@ Configuration:
     Property:
       - name: "DefaultPattern"
         value: "%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%t] [%c] - %msg%n"
+
   Appenders:
     Console:
       name: consoleAppender
       target: SYSTEM_OUT
       PatternLayout:
         Pattern: ${DefaultPattern}
+
     File:
       name: fileAppender
       fileName: "target/tests.log"
       PatternLayout:
         Pattern: ${DefaultPattern}
+
   Loggers:
     logger:
-      -
-        name: consoleLogger
+      - name: consoleLogger
         level: INFO
         additivity: true
         AppenderRef:
           ref: consoleAppender
-      -
-        name: fileLogger
+
+      - name: fileLogger
         level: INFO
         additivity: false
         AppenderRef:
           ref: fileAppender
+
     Root:
       level: INFO
       AppenderRef:

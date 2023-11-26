@@ -6,7 +6,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.List;
 
 public class Waiter {
 
@@ -31,21 +30,6 @@ public class Waiter {
     public static WebElement waitVisibilityOfElement20Second(WebElement element) {
         return new WebDriverWait(DriverSingleton.getInstance().getDriver(), Duration.ofSeconds(WAIT_TWENTY_SECONDS))
                 .until(ExpectedConditions.visibilityOf(element));
-    }
-
-    public static boolean waitInvisibilityOfElement10Second(WebElement element) {
-        return new WebDriverWait(DriverSingleton.getInstance().getDriver(), Duration.ofSeconds(WAIT_TEN_SECONDS))
-                .until(ExpectedConditions.invisibilityOf(element));
-    }
-
-    public static boolean waitInvisibilityOfElements10Second(List<WebElement> elements) {
-        return new WebDriverWait(DriverSingleton.getInstance().getDriver(), Duration.ofSeconds(WAIT_TEN_SECONDS))
-                .until(ExpectedConditions.invisibilityOfAllElements(elements));
-    }
-
-    public static WebElement waitElementToBeClickable10Second(WebElement element) {
-        return new WebDriverWait(DriverSingleton.getInstance().getDriver(), Duration.ofSeconds(WAIT_TEN_SECONDS))
-                .until(ExpectedConditions.elementToBeClickable(element));
     }
 
 }

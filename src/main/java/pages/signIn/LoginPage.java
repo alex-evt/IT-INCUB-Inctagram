@@ -1,5 +1,7 @@
 package pages.signIn;
 
+import io.qameta.allure.Step;
+import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import pages.BasePage;
@@ -8,18 +10,22 @@ import pages.components.HeaderComponent;
 import pages.signUp.RegistrationPage;
 import utils.Waiter;
 
+@Log4j2
 public class LoginPage extends BasePage<HeaderComponent> {
+
+    @FindBy(xpath = "//div[@id='sign-in']/p")
+    private WebElement title;
 
     @FindBy(xpath = "//input[@name='email']")
     private WebElement emailField;
 
-    @FindBy(xpath = "(//p[@id = 'sign-up-userName-error']) [1]")
+    @FindBy(xpath = "//p[@id = 'sign-in-email-input']")
     private WebElement emailErrorMessage;
 
     @FindBy(xpath = "//input[@name='password']")
     private WebElement passwordField;
 
-    @FindBy(xpath = "(//p[@id = 'sign-up-userName-error']) [2]")
+    @FindBy(xpath = "//p[@id='sign-in-password-input']")
     private WebElement passwordErrorMessage;
 
     @FindBy(xpath = "//img[contains(@id, 'showPassImage')]") //???
@@ -34,8 +40,6 @@ public class LoginPage extends BasePage<HeaderComponent> {
     @FindBy(xpath = "//a[@id = 'sign-in-link-sign-up']")
     private WebElement signUpButton;
 
-    @FindBy(xpath = "//div[@role='alert']")
-    private WebElement errorAlert;
 
     @FindBy(xpath = "//button[@type='button']")
     private WebElement languageButton;
@@ -46,7 +50,9 @@ public class LoginPage extends BasePage<HeaderComponent> {
     @FindBy(xpath = "//div[text() = 'Russian']")
     private WebElement russianLanguage;
 
+    @Step("Fill in {email} in Email field")
     public LoginPage fillInEmail(String email) {
+        log.info("Fill in '{}' in Email field", email);
         Waiter.waitVisibilityOfElement10Second(emailField).sendKeys(email);
         return this;
     }
@@ -55,15 +61,18 @@ public class LoginPage extends BasePage<HeaderComponent> {
         return emailErrorMessage.getText();
     }
 
+    @Step("Fill in {password} in Password field")
     public LoginPage fillInPassword(String password) {
+        log.info("Fill in '{}' in Password field", password);
         Waiter.waitVisibilityOfElement5Second(passwordField).sendKeys(password);
         return this;
     }
 
     public String getPasswordErrorMessage() {
-        return passwordErrorMessage.getText();
+        return Waiter.waitVisibilityOfElement5Second(passwordErrorMessage).getText();
     }
 
+    @Step("Click 'Sign In'")
     public MyProfilePage clickSignIn() {
         signInButton.click();
         return new MyProfilePage();
@@ -72,10 +81,6 @@ public class LoginPage extends BasePage<HeaderComponent> {
     public LoginPage clickForgotPassword() {
         forgotPasswordButton.click();
         return this;
-    }
-
-    public String getErrorAlert() {
-        return Waiter.waitVisibilityOfElement5Second(errorAlert).getText();
     }
 
     public RegistrationPage clickSignUp() { //signUp
@@ -88,6 +93,10 @@ public class LoginPage extends BasePage<HeaderComponent> {
         return new LoginPage();
     }
 
+    @Step("Get title 'Login'")
+    public String getTitle(){
+        return Waiter.waitVisibilityOfElement5Second(title).getText();
+    }
 
     @Override
     public HeaderComponent getHeader() {
