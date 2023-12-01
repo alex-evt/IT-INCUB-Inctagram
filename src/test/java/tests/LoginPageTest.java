@@ -1,6 +1,7 @@
 package tests;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.TmsLink;
 import models.User;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -25,6 +26,7 @@ public class LoginPageTest extends BaseTest {
     }
 
     @Description("Successful login to the system with email confirmation")
+    @TmsLink("IN-354")
     @Test(groups = "SuccessfulLogin")
     public void verifySuccessfulLogin() {
         User registeredUser = User.readUserDataFromFile();
@@ -34,6 +36,7 @@ public class LoginPageTest extends BaseTest {
     }
 
     @Description("Unsuccessful login to the system without email confirmation")
+    @TmsLink("IN-357")
     @Test
     public void verifyUnsuccessfulLoginEmailUnconfirmed() {
         String userName = Utility.getRandomUsername();
@@ -50,6 +53,7 @@ public class LoginPageTest extends BaseTest {
     }
 
     @Description("Unsuccessful authorization for a non-existent user")
+    @TmsLink("IN-358")
     @Test
     public void verifyUnsuccessfulLoginNonexistentUser() {
         String email = "nnn000n@ooooon.ozn";
@@ -63,6 +67,7 @@ public class LoginPageTest extends BaseTest {
     }
 
     @Description("Authorization error when entering an invalid email address")
+    @TmsLink("IN-355")
     @Test
     public void verifyErrorInvalidEmail() {
         String invalidEmail = "Jipeeer@keeeeperz.ol";
@@ -76,6 +81,7 @@ public class LoginPageTest extends BaseTest {
     }
 
     @Description("Authorization error when entering an invalid password")
+    @TmsLink("IN-356")
     @Test
     public void verifyErrorInvalidPassword() {
         String validEmail = User.readUserDataFromFile().getEmail();
@@ -89,6 +95,7 @@ public class LoginPageTest extends BaseTest {
     }
 
     @Description("Successful log out from account of the system")
+    @TmsLink("IN-365")
     @Test
     public void verifySuccessfulLogout() {
         User registeredUser = User.readUserDataFromFile();
@@ -100,6 +107,8 @@ public class LoginPageTest extends BaseTest {
         Assert.assertEquals(actualTitle, "Sign In");
     }
 
+    @Description("Successful log out from account of the system")
+    @TmsLink("IN-366")
     @Test(groups = "SuccessfulLogin")
     public void verifyCancelLogout() {
         User registeredUser = User.readUserDataFromFile();

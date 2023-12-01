@@ -24,7 +24,7 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
     @FindBy(xpath = "//input[@id='sign-up-passwordConfirm']")
     private WebElement confirmPasswordField;
 
-    @FindBy(xpath = "//input[@id='sign-up-agreemets']")
+    @FindBy(xpath = "//input[@id='sign-up-agreements']")
     private WebElement agreementsCheckbox;
 
     @FindBy(xpath = "//a[@href='./agreemets-page/terms-of-service']")
