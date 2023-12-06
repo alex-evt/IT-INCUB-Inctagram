@@ -1,7 +1,7 @@
 package tests;
 
-import API.tempmail.adapter.MailAdapter;
-import API.tempmail.utils.MailBuilder;
+import API.adapter.MailAdapter;
+import API.utils.MailBuilder;
 import io.qameta.allure.Description;
 import io.qameta.allure.TmsLink;
 import models.User;
