@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.safari.SafariDriver;
 
 @Log4j2
@@ -19,8 +20,11 @@ public class WebDriverFactory {
         try {
             switch (System.getProperty("browser")) {
                 case "firefox":
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.addArguments("-headless");
+                    firefoxOptions.addArguments("-lang=en");
                     WebDriverManager.firefoxdriver().setup();
-                    driver = new FirefoxDriver();
+                    driver = new FirefoxDriver(firefoxOptions);
                     break;
                 case "safari":
                     WebDriverManager.safaridriver().setup();
@@ -35,7 +39,7 @@ public class WebDriverFactory {
 //                    chromeOptions.addArguments("--incognito");
                     chromeOptions.addArguments("--headless");
                     chromeOptions.addArguments("--lang=en");
-//                    chromeOptions.addArguments("--window-size=1920,1080");
+                    chromeOptions.addArguments("--window-size=1920,1080");
                     WebDriverManager.chromedriver().setup();
                     driver = new ChromeDriver(chromeOptions);
             }

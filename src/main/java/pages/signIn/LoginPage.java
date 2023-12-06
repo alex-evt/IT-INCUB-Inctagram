@@ -93,7 +93,7 @@ public class LoginPage extends BasePage<HeaderComponent> {
         return new LoginPage();
     }
 
-    @Step("Get title 'Login'")
+    @Step("Get title 'Sign In'")
     public String getTitle(){
         return Waiter.waitVisibilityOfElement5Second(title).getText();
     }

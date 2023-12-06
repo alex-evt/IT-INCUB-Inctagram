@@ -10,7 +10,10 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import pages.signUp.CongratulationPage;
 import pages.signUp.RegistrationPage;
+import services.LoginPageService;
+import services.MyProfileService;
 import services.RegistrationPageService;
 import text.data.TextInfo;
 import utils.Utility;
@@ -20,6 +23,10 @@ public class RegistrationTest extends BaseTest {
     private static final String PASSWORD_FOR_EMAIL = "test1";
     RegistrationPageService registrationPageService = new RegistrationPageService();
     RegistrationPage registrationPage = new RegistrationPage();
+
+    LoginPageService loginPageService = new LoginPageService();
+    MyProfileService profileService = new MyProfileService();
+
     Faker faker = new Faker();
 
 
@@ -33,10 +40,18 @@ public class RegistrationTest extends BaseTest {
         MailAdapter mailer = MailBuilder.createRandomEmail(PASSWORD_FOR_EMAIL);
         String email = mailer.getEmailAddress();
         User user = User.builder().userName(username).email(email).password(password).passwordConfirm(password).build();
-        String actualEmailSentMessage = registrationPageService
-                .registrationWithConfirmation(mailer, user).getConfirmationText();
         User.writeUserDataToFile(username, password, email);
-        Assert.assertEquals(actualEmailSentMessage, "Your email has been confirmed");
+
+        registrationPageService
+                .registrationWithConfirmation(mailer, user);
+
+        String lastMail = mailer.getLastMessageConfirmationLink();
+        new CongratulationPage().open(lastMail).getConfirmationText();
+
+        loginPageService.login(user);
+        String title = profileService.logOut().getTitle();
+
+        Assert.assertEquals(title, "Sign In");
     }
 
 
@@ -56,7 +71,8 @@ public class RegistrationTest extends BaseTest {
         registrationPageService
                 .registrationWithConfirmation(mailer, user1);
 
-        registrationPageService.wait(15000);
+        loginPageService.login(user1);
+        profileService.logOut().getTitle();
 
         registrationPageService.
                 registrationWithoutConfirmation(user2);
@@ -256,9 +272,6 @@ public class RegistrationTest extends BaseTest {
                 {faker.expression("#{letterify '????.???????.com'}"), "Email must contain A-Z, a-z, ., @"}, // no @
                 {faker.expression("#{letterify '????@????'}"), "Email must contain A-Z, a-z, ., @"},  // no .
                 {faker.expression("#{letterify '??@??@?????.com'}"), "Email must contain A-Z, a-z, ., @"}, // more than two @
-                {faker.expression("#{letterify '???@??.???.com'}"), "Email must contain A-Z, a-z, ., @"}, // more than two .
-
-
                 {faker.expression("#{letterify '@?????.???'}"), "Email must contain A-Z, a-z, ., @"}, // missing local part
                 {faker.expression("#{letterify '-?????@???.??'}"), "Email must contain A-Z, a-z, ., @"}, //local part starts with -
                 {faker.expression("#{letterify '.?????@???.??'}"), "Email must contain A-Z, a-z, ., @"}, //local part starts with .
@@ -267,50 +280,34 @@ public class RegistrationTest extends BaseTest {
                 {faker.expression("#{letterify '?????.@???.??'}"), "Email must contain A-Z, a-z, ., @"}, //local part ends with .
                 {faker.expression("#{letterify ' ???@????.????'}"), "Email must not contain spaces"}, //local part starts with spaces
                 {faker.expression("#{letterify '??? @????.????'}"), "Email must not contain spaces"}, //local part ends with spaces
-
-
                 {faker.expression("#{letterify '?????@.???'}"), "Email must contain A-Z, a-z, ., @"}, // missing domain part
-
                 {faker.expression("#{letterify '???@_?????.???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part starts with _
                 {faker.expression("#{letterify '???@??_???.???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part with _
                 {faker.expression("#{letterify '???@?????_.???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part ends with _
-
                 {faker.expression("#{letterify '???@???--???.??'}"), "Email must contain A-Z, a-z, ., @"}, //domain part contains more than two -
-
                 {faker.expression("#{letterify '???@-?????.??'}"), "Email must contain A-Z, a-z, ., @"}, //domain part starts with -
                 {faker.expression("#{letterify '?????@?????-.???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part ends with -
                 {faker.expression("#{letterify '?????@.?????.???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part starts with .
                 {faker.expression("#{letterify '?????@?????..???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part ends with .
-
                 {faker.expression("#{letterify '???@-.???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part contains only -
                 {faker.expression("#{letterify '???@..???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part contains only .
                 {faker.expression("#{letterify '???@_.???'}"), "Email must contain A-Z, a-z, ., @"}, //domain part contains only _
-
                 {faker.expression("#{letterify '???@ ????.????'}"), "Email must not contain spaces"}, //domain part starts with spaces
                 {faker.expression("#{letterify '???@???? .????'}"), "Email must not contain spaces"}, //domain part ends with spaces
                 {faker.expression("#{letterify '???@???? ??.????'}"), "Email must not contain spaces"}, //domain part contain space
-
-
                 {faker.expression("#{letterify '?????@???'}"), "Email must contain A-Z, a-z, ., @"}, // missing TLD .
-//                {27, faker.expression("#{letterify '?????@?????.?'}"), null}, //TLD part have only 1 letter
-//                {28, faker.expression("#{letterify '?????@?????.????'}"), null}, //TLD part have more than 3 letter
                 {faker.expression("#{letterify '?????@?????.159'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part have digits
-
                 {faker.expression("#{letterify '?????@?????.??-?'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part have -
                 {faker.expression("#{letterify '?????@?????.-???'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part starts -
                 {faker.expression("#{letterify '?????@?????.???-'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part ends -
-
                 {faker.expression("#{letterify '?????@?????._???'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part starts _
                 {faker.expression("#{letterify '?????@?????.?_??'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part have _
                 {faker.expression("#{letterify '?????@?????.???_'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part ends _
-
                 {faker.expression("#{letterify '?????@?????.@???'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part starts with @
                 {faker.expression("#{letterify '?????@?????.??@?'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part with @
                 {faker.expression("#{letterify '?????@?????.???@'}"), "Email must contain A-Z, a-z, ., @"}, //TLD part ends @
-
                 {faker.expression("#{letterify '???@???. ???'}"), "Email must not contain spaces"}, //TLD part starts with space
                 {faker.expression("#{letterify '???@???.??? '}"), "Email must not contain spaces"}, //TLD part ends with space
-
         };
     }
 

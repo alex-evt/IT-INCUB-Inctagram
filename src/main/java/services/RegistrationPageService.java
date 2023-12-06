@@ -57,7 +57,7 @@ public class RegistrationPageService extends HeaderComponentService<Registration
         String confirmationLink = tempEmail.getLastMessageConfirmationLink();
 
         new CongratulationPage().open(confirmationLink).getConfirmationText();
-//        wait(20000);
+        wait(12000);
         return new CongratulationPage();
     }
 
