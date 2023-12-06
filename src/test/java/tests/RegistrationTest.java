@@ -1,7 +1,7 @@
 package tests;
 
-import API.adapter.MailAdapter;
-import API.utils.MailBuilder;
+import API.tempmail.adapter.MailAdapter;
+import API.tempmail.utils.MailBuilder;
 import io.qameta.allure.Description;
 import io.qameta.allure.TmsLink;
 import models.User;
@@ -36,17 +36,15 @@ public class RegistrationTest extends BaseTest {
     public void verifySuccessfulUserRegistrationWithEmailConfirmation() {
         String username = Utility.getUsername();
         String password = Utility.getRandomPassword();
-
         MailAdapter mailer = MailBuilder.createRandomEmail(PASSWORD_FOR_EMAIL);
         String email = mailer.getEmailAddress();
+
         User user = User.builder().userName(username).email(email).password(password).passwordConfirm(password).build();
         User.writeUserDataToFile(username, password, email);
 
-        registrationPageService
+        new RegistrationPageService()
                 .registrationWithConfirmation(mailer, user);
-
-        String lastMail = mailer.getLastMessageConfirmationLink();
-        new CongratulationPage().open(lastMail).getConfirmationText();
+        new CongratulationPage().clickSignInButton();
 
         loginPageService.login(user);
         String title = profileService.logOut().getTitle();
@@ -59,14 +57,14 @@ public class RegistrationTest extends BaseTest {
     @TmsLink(value = "IN-340")
     @Test
     public void verifyErrorIfEmailIsExistInSystem() {
-        String userName = Utility.getUsername();
+        String username = Utility.getUsername();
         String username2 = Utility.getUsername();
         String password = Utility.getRandomPassword();
         String password2 = Utility.getRandomPassword();
         MailAdapter mailer = MailBuilder.createRandomEmail(PASSWORD_FOR_EMAIL);
         String email = mailer.getSelf().getEmail();
 
-        User user1 = User.builder().userName(userName).email(email).password(password).passwordConfirm(password).build();
+        User user1 = User.builder().userName(username).email(email).password(password).passwordConfirm(password).build();
         User user2 = User.builder().userName(username2).email(email).password(password2).passwordConfirm(password2).build();
         registrationPageService
                 .registrationWithConfirmation(mailer, user1);
@@ -103,8 +101,6 @@ public class RegistrationTest extends BaseTest {
 
         registrationPageService
                 .registrationWithConfirmation(mailer, user1);
-
-        registrationPageService.wait(15000);
 
         String actualErrorMessage = registrationPageService
                 .registrationWithoutConfirmation(user2)
