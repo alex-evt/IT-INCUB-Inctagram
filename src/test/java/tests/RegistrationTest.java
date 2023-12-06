@@ -1,12 +1,13 @@
 package tests;
 
-import API.adapter.MailAdapter;
-import API.utils.MailBuilder;
+import API.tempmail.adapter.MailAdapter;
+import API.tempmail.utils.MailBuilder;
 import io.qameta.allure.Description;
 import io.qameta.allure.TmsLink;
 import models.User;
 import net.datafaker.Faker;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -21,13 +22,20 @@ import utils.Utility;
 public class RegistrationTest extends BaseTest {
 
     private static final String PASSWORD_FOR_EMAIL = "test1";
-    RegistrationPageService registrationPageService = new RegistrationPageService();
-    RegistrationPage registrationPage = new RegistrationPage();
+    RegistrationPageService registrationPageService ;
+    RegistrationPage registrationPage;
 
-    LoginPageService loginPageService = new LoginPageService();
-    MyProfileService profileService = new MyProfileService();
+    LoginPageService loginPageService;
+    MyProfileService profileService;
 
     Faker faker = new Faker();
+    @BeforeClass
+    public void initAndLogin() {
+        registrationPageService  = new RegistrationPageService();
+        registrationPage = new RegistrationPage();
+        loginPageService = new LoginPageService();
+        profileService = new MyProfileService();
+    }
 
 
     @Description("Successful registration in the system with email confirmation")
@@ -37,16 +45,18 @@ public class RegistrationTest extends BaseTest {
         String username = Utility.getUsername();
         String password = Utility.getRandomPassword();
         MailAdapter mailer = MailBuilder.createRandomEmail(PASSWORD_FOR_EMAIL);
-        String email = mailer.getEmailAddress();
-
-        User user = User.builder().userName(username).email(email).password(password).passwordConfirm(password).build();
+        String email = mailer.getSelf().getEmail();
         User.writeUserDataToFile(username, password, email);
 
-        new RegistrationPageService()
-                .registrationWithConfirmation(mailer, user);
-        new CongratulationPage().clickSignInButton();
+        User user1 = User.builder().userName(username).email(email).password(password).passwordConfirm(password).build();
+        registrationPageService
+                .registrationWithConfirmation(mailer, user1);
 
-        loginPageService.login(user);
+        String confirmationLink = mailer.getLastMessageConfirmationLink();
+        new CongratulationPage().open(confirmationLink);
+        registrationPageService.wait(6000);
+
+        loginPageService.login(user1);
         String title = profileService.logOut().getTitle();
 
         Assert.assertEquals(title, "Sign In");

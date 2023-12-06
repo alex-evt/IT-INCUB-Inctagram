@@ -1,6 +1,6 @@
 package services;
 
-import API.adapter.MailAdapter;
+import API.tempmail.adapter.MailAdapter;
 import io.qameta.allure.Step;
 import models.User;
 import pages.signUp.CongratulationPage;
@@ -53,11 +53,9 @@ public class RegistrationPageService extends HeaderComponentService<Registration
                 .clickOkButton();
 
         wait(10000);
-
         String confirmationLink = tempEmail.getLastMessageConfirmationLink();
-
-        new CongratulationPage().open(confirmationLink).getConfirmationText();
-        wait(12000);
+        new CongratulationPage().open(confirmationLink);
+        wait(10000);
         return new CongratulationPage();
     }
 

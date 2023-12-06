@@ -1,15 +1,15 @@
-package API.utils;
+package API.tempmail.utils;
 
-import API.adapter.BaseAdapter;
-import API.adapter.MailAdapter;
-import API.objects.Domains;
+import API.tempmail.adapter.BaseAdapter;
+import API.tempmail.adapter.MailAdapter;
+import API.tempmail.objects.Domains;
 import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
 
 import javax.security.auth.login.LoginException;
 
-import static API.utils.StringConstant.ACCOUNTS_ENDPOINT;
-import static API.utils.StringConstant.TOKEN_ENDPOINT;
+import static API.tempmail.utils.StringConstant.ACCOUNTS_ENDPOINT;
+import static API.tempmail.utils.StringConstant.TOKEN_ENDPOINT;
 
 @Log4j2
 public class MailBuilder extends BaseAdapter {

@@ -1,13 +1,13 @@
-package API.adapter;
+package API.tempmail.adapter;
 
-import API.objects.Account;
-import API.objects.ContextMessage;
+import API.tempmail.objects.Account;
+import API.tempmail.objects.ContextMessage;
 import io.restassured.response.Response;
 import lombok.extern.log4j.Log4j2;
 
 
-import static API.utils.StringConstant.MESSAGES_ENDPOINT;
-import static API.utils.StringConstant.ME_ENDPOINT;
+import static API.tempmail.utils.StringConstant.MESSAGES_ENDPOINT;
+import static API.tempmail.utils.StringConstant.ME_ENDPOINT;
 
 @Log4j2
 public class MailAdapter extends BaseAdapter {

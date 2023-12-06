@@ -1,4 +1,4 @@
-package API.objects;
+package API.tempmail.objects;
 
 import lombok.Data;
 

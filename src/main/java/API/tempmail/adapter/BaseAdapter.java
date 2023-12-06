@@ -1,14 +1,14 @@
-package API.adapter;
+package API.tempmail.adapter;
 
 import com.google.gson.Gson;
 import io.restassured.response.Response;
 
-import static API.utils.StringConstant.*;
+import static API.tempmail.utils.StringConstant.*;
 import static io.restassured.RestAssured.given;
 
 public class BaseAdapter {
 
-    Gson converter = new Gson();
+    protected Gson converter = new Gson();
 
 
     public static Response requestGET(String url) {

@@ -1,4 +1,4 @@
-package API.utils;
+package API.tempmail.utils;
 
 import java.util.Random;
 

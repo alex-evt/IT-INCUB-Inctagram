@@ -1,8 +1,6 @@
-package API.utils;
+package API.tempmail.utils;
 
 public class StringConstant {
-
-
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String APPLICATION_JSON = "application/json";
     public static final String BASE_URL = "https://api.mail.tm";

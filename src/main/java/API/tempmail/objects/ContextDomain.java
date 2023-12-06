@@ -1,5 +1,4 @@
-package API.objects;
-
+package API.tempmail.objects;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Builder;
@@ -9,9 +8,9 @@ import java.util.ArrayList;
 
 @Data
 @Builder
-public class ContextMessage {
+public class ContextDomain {
 
     @SerializedName("hydra:member")
-    ArrayList<Message> hydraMember;
+    ArrayList<Domain> hydraMember;
 
 }
