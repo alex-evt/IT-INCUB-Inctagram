@@ -24,7 +24,7 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
     @FindBy(xpath = "//input[@id='sign-up-passwordConfirm']")
     private WebElement confirmPasswordField;
 
-    @FindBy(xpath = "//input[@id='sign-up-agreements']")
+    @FindBy(xpath = "//input[@id='sign-up-agreements']/following-sibling::*[local-name() = 'svg']")
     private WebElement agreementsCheckbox;
 
     @FindBy(xpath = "//a[@href='./agreemets-page/terms-of-service']")
@@ -66,7 +66,7 @@ public class RegistrationPage extends BasePage<HeaderComponent> {
     @FindBy(xpath = "//div[@class='modal__body']")
     private WebElement successfulEmailSentMessage;
 
-    @FindBy(xpath = "//div[@class='modal__footer']/button")
+    @FindBy(xpath = "//div[contains(@class, 'modal__footer')]/button")
     private WebElement emailSentMessageOkButton;
 
     @Step("Fill in {username} in Username field")
